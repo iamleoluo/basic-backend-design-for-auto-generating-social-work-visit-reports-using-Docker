@@ -15,4 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5050
 
 # 啟動 Flask
-CMD ["python", "app.py"] 
+CMD ["sh", "-c", "echo '{\"my_openai_key\": \"'$MY_OPENAI_KEY'\"}' > api_key.json && python app.py"]
