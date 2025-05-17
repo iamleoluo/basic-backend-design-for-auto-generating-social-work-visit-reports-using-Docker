@@ -34,7 +34,7 @@ cd <專案資料夾>
 
 ```bash
 docker build -t visit-report-backend .
-docker run -e MY_OPENAI_KEY=sk-abc123456789 -p 5050:5050 my_image_name
+docker run -e MY_OPENAI_KEY=sk-abc123456789 -p 5050:5050 visit-report-backend
 ```
 
 ### 4. API 使用說明
