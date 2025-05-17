@@ -28,12 +28,14 @@ if __name__ == "__main__":
             q = prompt["template"].format(input=input_text)
         else:
             q = prompt.get("question", "")
+        print("-----------------------------------------")
         print(f"[Q] {q}")
         print(f"[AI] {pm.chat(conversation_id, q, model_id=model_id, temperature=temperature)}")
-
+        print("-----------------------------------------")
     print("=== 對話歷史 ===")
     for msg in pm.get_conversation_history(conversation_id):
         print(f"[{msg['role']}] {msg['content']}")
+        print("-----------------------------------------")
 
     pm.clear_conversation(conversation_id)
 
