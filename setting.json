@@ -9,12 +9,12 @@
     "id": "openai_gpt-4o",
     "platform": "openai",
     "model": "gpt-4o",
-    "openai_api_key": "leo_openai_key"
+    "openai_api_key": "my_openai_key"
   },
   {
     "id": "openai_gpt-3.5",
     "platform": "openai",
     "model": "gpt-3.5-turbo",
-    "openai_api_key": "leo_openai_key"
+    "openai_api_key": "my_openai_key"
   }
 ] 
