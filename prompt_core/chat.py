@@ -72,7 +72,7 @@ class ChatBot:
             raise ValueError(f"不支援的平台: {platform}")
 
     def chat(self, messages: List[Dict[str, str]], 
-             temperature: float = 0.0, stream: bool = False, model_id: Optional[str] = None) -> str:
+             temperature: float = 0.0, stream: bool = False, model_id: Optional[str] = None):
         """與AI進行對話
         
         Args:
@@ -82,7 +82,7 @@ class ChatBot:
             model_id: 指定的模型 id（可選，若有則臨時切換）
             
         Returns:
-            AI的回應文本
+            AI的回應文本或 generator（若 stream=True）
         """
         try:
             if model_id and model_id != self.current_model_id:
@@ -95,16 +95,13 @@ class ChatBot:
                     options={"temperature": temperature}
                 )
                 if stream:
-                    full_response = ""
                     for chunk in response:
                         if isinstance(chunk, dict) and 'message' in chunk:
                             content = chunk['message'].get('content', '')
                             if content:
-                                full_response += content
-                    response_text = full_response
+                                yield content
                 else:
-                    response_text = response['message']['content']
-                return response_text
+                    return response['message']['content']
             elif getattr(self, 'platform', None) == 'openai':
                 openai.api_key = self.api_key
                 response = openai.chat.completions.create(
@@ -114,16 +111,13 @@ class ChatBot:
                     stream=stream
                 )
                 if stream:
-                    full_response = ""
                     for chunk in response:
                         if hasattr(chunk, 'choices') and chunk.choices:
                             delta = chunk.choices[0].delta
                             if hasattr(delta, 'content') and delta.content:
-                                full_response += delta.content
-                    response_text = full_response
+                                yield delta.content
                 else:
-                    response_text = response.choices[0].message.content
-                return response_text
+                    return response.choices[0].message.content
             else:
                 return "不支援的平台"
         except Exception as e:

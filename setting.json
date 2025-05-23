@@ -3,7 +3,7 @@
     "id": "ollama_llama3.2",
     "platform": "ollama",
     "model": "llama3.2",
-    "url": "http://host.docker.internal:11434"
+    "url": "http://127.0.0.1:11434"
   },
   {
     "id": "openai_gpt-4o",

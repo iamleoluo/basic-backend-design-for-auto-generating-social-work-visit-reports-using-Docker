@@ -65,7 +65,8 @@ class PromptManager:
             system_prompt: Optional[str] = None,
             temperature: Optional[float] = None,
             stream: Optional[bool] = None,
-            model_id: Optional[str] = None) -> str:
+            model_id: Optional[str] = None,
+            as_generator: bool = False) -> str:
         """使用特定的提示模板進行對話
         
         Args:
@@ -75,9 +76,10 @@ class PromptManager:
             temperature: 溫度參數
             stream: 是否使用流式輸出
             model_id: 指定的模型 id
+            as_generator: 若為 True 且 stream，則回傳 generator
         
         Returns:
-            AI的回應文本
+            AI的回應文本或 generator
         """
         # 確保對話歷史存在
         self.create_conversation(conversation_id)
@@ -97,27 +99,47 @@ class PromptManager:
         strm = stream if stream is not None else self.default_stream
         model_to_use = model_id if model_id is not None else self.config.get_default_model_id()
         
-        # 進行對話
-        response = self.chat_bot.chat(
-            messages=messages,
-            temperature=temp,
-            stream=strm,
-            model_id=model_to_use
-        )
-        
-        # 更新對話歷史
-        if system_prompt and not self.conversation_histories[conversation_id]:
-            self.conversation_histories[conversation_id].append(
-                {"role": "system", "content": system_prompt}
+        if as_generator and strm:
+            # yield chunk by chunk
+            chunks = self.chat_bot.chat(
+                messages=messages,
+                temperature=temp,
+                stream=True,
+                model_id=model_to_use
             )
-        self.conversation_histories[conversation_id].append(
-            {"role": "user", "content": user_input}
-        )
-        self.conversation_histories[conversation_id].append(
-            {"role": "assistant", "content": response}
-        )
-        
-        return response
+            full_response = ""
+            for chunk in chunks:
+                yield chunk
+                full_response += chunk
+            # 更新對話歷史
+            if system_prompt and not self.conversation_histories[conversation_id]:
+                self.conversation_histories[conversation_id].append(
+                    {"role": "system", "content": system_prompt}
+                )
+            self.conversation_histories[conversation_id].append(
+                {"role": "user", "content": user_input}
+            )
+            self.conversation_histories[conversation_id].append(
+                {"role": "assistant", "content": full_response}
+            )
+        else:
+            response = self.chat_bot.chat(
+                messages=messages,
+                temperature=temp,
+                stream=strm,
+                model_id=model_to_use
+            )
+            if system_prompt and not self.conversation_histories[conversation_id]:
+                self.conversation_histories[conversation_id].append(
+                    {"role": "system", "content": system_prompt}
+                )
+            self.conversation_histories[conversation_id].append(
+                {"role": "user", "content": user_input}
+            )
+            self.conversation_histories[conversation_id].append(
+                {"role": "assistant", "content": response}
+            )
+            return response
 
     def set_default_parameters(self, temperature: float = 0.0, stream: bool = False) -> None:
         """設置默認參數

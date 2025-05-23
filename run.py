@@ -1,5 +1,6 @@
 from prompt_core.prompt import PromptManager, PromptLibrary
 import json
+import sys
 
 if __name__ == "__main__":
     with open("run.json", "r", encoding="utf-8") as f:
@@ -28,17 +29,19 @@ if __name__ == "__main__":
             q = prompt["template"].format(input=input_text)
         else:
             q = prompt.get("question", "")
-        print("-----------------------------------------")
-        print(f"[Q] {q}")
-        print(f"[AI] {pm.chat(conversation_id, q, model_id=model_id, temperature=temperature)}")
-        print("-----------------------------------------")
-    print("=== 對話歷史 ===")
+        print("-----------------------------------------", file=sys.stderr)
+        print(f"[Q] {q}", file=sys.stderr)
+        for chunk in pm.chat(conversation_id, q, model_id=model_id, temperature=temperature, stream=True, as_generator=True):
+            print(json.dumps({"content": chunk}), flush=True)
+        print("\n", file=sys.stderr)
+        print("-----------------------------------------", file=sys.stderr)
+'''print("=== 對話歷史 ===")
     for msg in pm.get_conversation_history(conversation_id):
         print(f"[{msg['role']}] {msg['content']}")
         print("-----------------------------------------")
 
     pm.clear_conversation(conversation_id)
-
+'''
 
 
 
