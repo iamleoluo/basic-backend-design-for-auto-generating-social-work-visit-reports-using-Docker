@@ -21,5 +21,20 @@ def run_script():
         process.wait()
     return Response(generate(), mimetype='application/x-ndjson')
 
+@app.route('/PersonGraph', methods=['POST'])
+def run_person_graph():
+    data = request.get_json()
+    text = data.get('text', '')
+    def generate():
+        print("收到請求，開始寫入 input.txt", file=sys.stderr)
+        with open('input.txt', 'w', encoding='utf-8') as f:
+            f.write(text)
+        process = subprocess.Popen([sys.executable, 'person_graph.py'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in process.stdout:
+            yield line
+        process.stdout.close()
+        process.wait()
+    return Response(generate(), mimetype='application/x-ndjson')
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5050, debug=True) 
