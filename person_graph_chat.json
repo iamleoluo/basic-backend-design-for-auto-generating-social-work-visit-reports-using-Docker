@@ -1,4 +1,4 @@
 {
-  "default_model_id": "openai_gpt-3.5",
+  "default_model_id": "openai_gpt-4o",
   "description": "人物關係圖對話編輯配置"
 } 
