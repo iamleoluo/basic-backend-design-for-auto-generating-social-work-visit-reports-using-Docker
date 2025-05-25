@@ -1,6 +1,6 @@
 {
   "input_file": "input.txt",
-  "default_model_id": "openai_gpt-4o",
+  "default_model_id": "openai_gpt-4o-mini",
   "temperature": 0.0,
   "stream": true,
   "steps": [

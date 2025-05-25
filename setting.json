@@ -16,5 +16,11 @@
     "platform": "openai",
     "model": "gpt-3.5-turbo",
     "openai_api_key": "my_openai_key"
+  },
+  {
+    "id": "openai_gpt-4o-mini",
+    "platform": "openai",
+    "model": "gpt-4o-mini",
+    "openai_api_key": "my_openai_key"
   }
 ] 
