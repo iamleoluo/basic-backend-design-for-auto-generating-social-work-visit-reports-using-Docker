@@ -28,7 +28,7 @@ def cleanup_session_files(session_id: str):
         import shutil
         shutil.rmtree(session_dir)
 
-@app.route('/run', methods=['POST'])
+@app.route('/api/run', methods=['POST'])
 def run_script():
     data = request.get_json()
     text = data.get('text', '')
@@ -57,7 +57,7 @@ def run_script():
     
     return Response(generate(), mimetype='application/x-ndjson')
 
-@app.route('/PersonGraph', methods=['POST'])
+@app.route('/api/PersonGraph', methods=['POST'])
 def run_person_graph():
     data = request.get_json()
     text = data.get('text', '')
@@ -84,7 +84,7 @@ def run_person_graph():
     
     return Response(generate(), mimetype='application/x-ndjson')
 
-@app.route('/PersonGraphChat', methods=['POST'])
+@app.route('/api/PersonGraphChat', methods=['POST'])
 def person_graph_chat():
     data = request.get_json()
     message = data.get('message', '')
