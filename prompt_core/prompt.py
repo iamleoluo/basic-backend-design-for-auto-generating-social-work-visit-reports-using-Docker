@@ -61,7 +61,7 @@ class PromptManager:
         
     def chat(self, 
             conversation_id: str,
-            user_input: str,
+            user_input,  # 可以是 str、dict 或 list
             system_prompt: Optional[str] = None,
             temperature: Optional[float] = None,
             stream: Optional[bool] = None,
@@ -71,7 +71,7 @@ class PromptManager:
         
         Args:
             conversation_id: 對話的唯一識別碼
-            user_input: 用戶輸入的文本
+            user_input: 用戶輸入（可以是 str、dict 或 list）
             system_prompt: 系統提示詞
             temperature: 溫度參數
             stream: 是否使用流式輸出
@@ -91,8 +91,24 @@ class PromptManager:
         if system_prompt and not messages:
             messages.insert(0, {"role": "system", "content": system_prompt})
         
-        # 添加用戶輸入
-        messages.append({"role": "user", "content": user_input})
+        # 處理用戶輸入，支援多種格式
+        if isinstance(user_input, dict):
+            # 如果是字典且有 template，使用 template 內容
+            if 'template' in user_input:
+                messages.append({"role": "user", "content": user_input['template']})
+            elif 'role' in user_input and 'content' in user_input:
+                messages.append(user_input)
+            else:
+                messages.append({"role": "user", "content": str(user_input)})
+        elif isinstance(user_input, list):
+            # 如果是列表，直接添加所有消息
+            messages.extend(user_input)
+        elif isinstance(user_input, str):
+            # 如果是字串，轉換為用戶消息
+            messages.append({"role": "user", "content": user_input})
+        else:
+            # 其他類型轉為字串
+            messages.append({"role": "user", "content": str(user_input)})
         
         # 使用提供的參數或默認值
         temp = temperature if temperature is not None else self.default_temperature
@@ -116,9 +132,15 @@ class PromptManager:
                 self.conversation_histories[conversation_id].append(
                     {"role": "system", "content": system_prompt}
                 )
-            self.conversation_histories[conversation_id].append(
-                {"role": "user", "content": user_input}
-            )
+            # 記錄實際發送的用戶輸入
+            if isinstance(user_input, str):
+                self.conversation_histories[conversation_id].append(
+                    {"role": "user", "content": user_input}
+                )
+            elif isinstance(user_input, dict) and 'template' in user_input:
+                self.conversation_histories[conversation_id].append(
+                    {"role": "user", "content": user_input['template']}
+                )
             self.conversation_histories[conversation_id].append(
                 {"role": "assistant", "content": full_response}
             )
@@ -133,9 +155,15 @@ class PromptManager:
                 self.conversation_histories[conversation_id].append(
                     {"role": "system", "content": system_prompt}
                 )
-            self.conversation_histories[conversation_id].append(
-                {"role": "user", "content": user_input}
-            )
+            # 記錄實際發送的用戶輸入
+            if isinstance(user_input, str):
+                self.conversation_histories[conversation_id].append(
+                    {"role": "user", "content": user_input}
+                )
+            elif isinstance(user_input, dict) and 'template' in user_input:
+                self.conversation_histories[conversation_id].append(
+                    {"role": "user", "content": user_input['template']}
+                )
             self.conversation_histories[conversation_id].append(
                 {"role": "assistant", "content": response}
             )

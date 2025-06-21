@@ -32,7 +32,20 @@ def cleanup_session_files(session_id: str):
 def run_script():
     data = request.get_json()
     text = data.get('text', '')
-    session_id = data.get('sessionId', str(uuid.uuid4()))  # 如果沒有提供 sessionId，生成一個新的
+    template = data.get('template', '司法社工家庭訪視模板')  # 新增模板參數
+    session_id = data.get('sessionId', str(uuid.uuid4()))
+    
+    # 根據模板選擇對應的配置文件
+    config_file_map = {
+        '士林地院家事服務中心格式(ChatGPT)': 'run_court_format_gpt.json',
+        '士林地院家事服務中心格式(Claude)': 'run_court_format_claude.json',
+        '珍珠社會福利協會格式(ChatGPT)': 'run_association_format_gpt.json',
+        '珍珠社會福利協會格式(Claude)': 'run_association_format_claude.json',
+        '司法社工家庭訪視模板': 'run.json'  # 保持向後兼容
+    }
+    config_file = config_file_map.get(template, 'run.json')  # 默認使用原配置
+    
+    print(f"收到生成報告請求，會話ID: {session_id}, 模板: {template}, 配置文件: {config_file}", file=sys.stderr)
     
     def generate():
         # 為每個會話創建獨立的輸入文件
@@ -40,11 +53,12 @@ def run_script():
         with open(input_file, 'w', encoding='utf-8') as f:
             f.write(text)
         
-        # 修改 run.py 的調用，傳入會話ID和輸入文件路徑
+        # 修改 run.py 的調用，傳入會話ID和輸入文件路徑以及配置文件
         process = subprocess.Popen([
             sys.executable, 'run.py', 
             '--session-id', session_id,
-            '--input-file', input_file
+            '--input-file', input_file,
+            '--config-file', config_file  # 使用對應的配置文件
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         
         for line in process.stdout:
