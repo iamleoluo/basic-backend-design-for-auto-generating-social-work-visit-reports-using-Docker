@@ -1,0 +1,102 @@
+{
+  "sections": {
+    "main_issue": {
+      "name": "主述問題",
+      "prompt_template": "一、主述問題\n請根據逐字稿內容，清楚描述案主提出的主要問題和訴求。",
+      "priority": 1,
+      "required": true
+    },
+    "case_overview": {
+      "name": "個案概況",
+      "prompt_template": "二、個案概況\n請整理案主的基本情況和背景資料，包括：\n(一)家庭基本資料\n(二)個人背景\n(三)相關歷史",
+      "priority": 2,
+      "required": false
+    },
+    "family_situation": {
+      "name": "家庭狀況",
+      "prompt_template": "三、家庭狀況\n請詳細分析家庭成員關係和互動情況：\n(一)家庭結構\n(二)成員關係\n(三)家庭動力\n(四)溝通模式",
+      "priority": 3,
+      "required": false
+    },
+    "children_issues": {
+      "name": "子女議題",
+      "prompt_template": "四、子女議題\n請分析子女相關的問題和需求：\n(一)子女基本狀況\n(二)親子關係\n(三)子女需求與問題\n(四)教養與照顧安排",
+      "priority": 4,
+      "required": false
+    },
+    "legal_status": {
+      "name": "訴訟狀況",
+      "prompt_template": "五、訴訟狀況\n請整理法律程序和訴訟進展：\n(一)訴訟類型與進度\n(二)爭議焦點\n(三)各方主張\n(四)法律相關事項",
+      "priority": 5,
+      "required": false
+    },
+    "financial_status": {
+      "name": "經濟狀況",
+      "prompt_template": "六、經濟狀況\n請分析家庭經濟能力和資源：\n(一)收入來源\n(二)支出負擔\n(三)經濟困難\n(四)資源評估",
+      "priority": 6,
+      "required": false
+    },
+    "social_worker_assessment": {
+      "name": "社工評估",
+      "prompt_template": "七、社工評估(AI生成)\n請提供專業的社工評估和分析：\n(一)問題評估\n(二)風險評估\n(三)資源評估\n(四)需求評估",
+      "priority": 7,
+      "required": false
+    },
+    "intervention_recommendations": {
+      "name": "處遇建議",
+      "prompt_template": "八、處遇建議\n請提供具體的處置建議和方案：\n(一)短期目標\n(二)長期目標\n(三)具體策略\n(四)資源連結",
+      "priority": 8,
+      "required": false
+    },
+    "follow_up": {
+      "name": "後續追蹤",
+      "prompt_template": "九、後續追蹤\n請規劃後續服務和追蹤計畫：\n(一)追蹤時程\n(二)評估指標\n(三)服務安排\n(四)預期成效",
+      "priority": 9,
+      "required": false
+    }
+  },
+  "templates": {
+    "司法社工家庭訪視模板": {
+      "base_prompt": "請你根據下面的逐字稿內容，幫我整理成結構化的家事商談報告。",
+      "style": "formal",
+      "special_instructions": "請以客觀、清晰、社工報告常用的第三人稱文風撰寫。若原文資訊不清楚，請合理推測但絕對要避免虛構。"
+    },
+    "士林地院家事服務中心格式(ChatGPT)": {
+      "base_prompt": "請根據士林地方法院家事服務中心的格式要求，整理以下逐字稿為正式報告。",
+      "style": "judicial",
+      "special_instructions": "請遵循法院格式，語言正式嚴謹，條理清晰。"
+    },
+    "士林地院家事服務中心格式(Claude)": {
+      "base_prompt": "請根據士林地方法院家事服務中心的格式要求，整理以下逐字稿為正式報告。",
+      "style": "judicial_claude",
+      "special_instructions": "請遵循法院格式，語言正式嚴謹，條理清晰，注重邏輯性和專業性。"
+    },
+    "珍珠社會福利協會格式(ChatGPT)": {
+      "base_prompt": "請根據珍珠社會福利協會的報告格式，整理以下逐字稿內容。",
+      "style": "welfare_gpt",
+      "special_instructions": "請注重社會福利服務的角度，強調關懷與支持。"
+    },
+    "珍珠社會福利協會格式(Claude)": {
+      "base_prompt": "請根據珍珠社會福利協會的報告格式，整理以下逐字稿內容。",
+      "style": "welfare_claude",
+      "special_instructions": "請注重社會福利服務的角度，強調關懷與支持，語言溫和專業。"
+    }
+  },
+  "style_preferences": {
+    "formal": {
+      "tone": "正式、客觀、專業",
+      "structure": "條理清晰、邏輯嚴謹",
+      "language": "第三人稱、術語準確"
+    },
+    "detailed": {
+      "tone": "詳細、深入、分析性",
+      "structure": "全面覆蓋、深度分析",
+      "language": "豐富描述、專業術語"
+    },
+    "concise": {
+      "tone": "簡潔、重點突出",
+      "structure": "精簡有力、核心要點",
+      "language": "言簡意賅、重點明確"
+    }
+  }
+}
