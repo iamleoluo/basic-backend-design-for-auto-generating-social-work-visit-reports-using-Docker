@@ -13,6 +13,7 @@ def main():
     parser.add_argument('--current-graph', required=True, help='當前人物關係圖JSON')
     parser.add_argument('--transcript', default='', help='原始逐字稿')
     parser.add_argument('--config-file', default='person_graph_chat.json', help='配置文件路徑')
+    parser.add_argument('--graph-type', default='person', help='關係圖類型 (person/family)')
     
     args = parser.parse_args()
     

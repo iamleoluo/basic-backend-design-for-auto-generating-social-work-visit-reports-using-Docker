@@ -1,0 +1,13 @@
+{
+  "input_file": "input.txt",
+  "default_model_id": "openai_gpt-4o-mini",
+  "temperature": 0.0,
+  "stream": true,
+  "steps": [
+    {
+      "label": "family_graph",
+      "type": "chat",
+      "template": "請分析逐字稿中的家庭成員關係，專注於血緣關係和婚姻關係，生成適合FamilyTree.js的家族樹格式，直接回傳純JSON陣列（無額外說明）。\\n\\n範例格式：\\n[\\n  {{\\\"id\\\": 1, \\\"name\\\": \\\"張小明\\\", \\\"gender\\\": \\\"male\\\", \\\"birth_year\\\": \\\"1990\\\", \\\"pids\\\": [2], \\\"mid\\\": 3, \\\"fid\\\": 4, \\\"tags\\\": [\\\"案主\\\"]}},\\n  {{\\\"id\\\": 2, \\\"name\\\": \\\"林小玉\\\", \\\"gender\\\": \\\"female\\\", \\\"birth_year\\\": \\\"1992\\\", \\\"pids\\\": [1], \\\"tags\\\": [\\\"配偶\\\"]}}\\n]\\n\\nFamilyTree.js 格式要求：\\n- id: 數字型唯一識別碼\\n- name: 姓名或稱謂\\n- gender: \\\"male\\\" 或 \\\"female\\\"\\n- birth_year: 出生年份（字串）\\n- pids: 配偶ID陣列\\n- mid: 母親ID\\n- fid: 父親ID\\n- tags: 角色標籤陣列\\n\\n分析重點：\\n1. 建立正確的血緣和婚姻關係\\n2. 分配連續的數字ID\\n3. 確保關係引用一致性\\n4. 添加適當的角色標籤\\n5. 推估合理的年齡資訊\\n\\n逐字稿內容：\\n{input}"
+    }
+  ]
+}
