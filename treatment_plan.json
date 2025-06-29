@@ -1,6 +1,6 @@
 {
   "input_file": "treatment_input.txt",
-  "default_model_id": "openai_gpt-4o",
+  "default_model_id": "claude_sonnet",
   "temperature": 0.3,
   "stream": true,
   "steps": [
