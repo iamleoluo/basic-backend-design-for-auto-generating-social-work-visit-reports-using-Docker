@@ -72,11 +72,16 @@ def person_graph_chat():
         with open(input_file, 'w', encoding='utf-8') as f:
             f.write(f"原始逐字稿:\n{transcript}\n\n當前{graph_type_name}JSON:\n{current_graph}\n\n用戶指令:\n{message}")
         
-        # 根據圖表類型選擇對應的配置文件
-        config_file = 'family_graph_chat.json' if graph_type == 'family' else 'person_graph_chat.json'
+        # 根據圖表類型選擇對應的腳本和配置文件
+        if graph_type == 'family':
+            script_name = 'family_graph_chat.py'
+            config_file = 'family_graph_chat.json'
+        else:
+            script_name = 'person_graph_chat.py'
+            config_file = 'person_graph_chat.json'
         
         process = subprocess.Popen([
-            sys.executable, 'person_graph_chat.py',
+            sys.executable, script_name,
             '--session-id', session_id,
             '--input-file', input_file,
             '--message', message,
