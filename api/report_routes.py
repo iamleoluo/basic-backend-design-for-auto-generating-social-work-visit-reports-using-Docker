@@ -37,7 +37,7 @@ def run_script():
             sys.executable, 'run.py', 
             '--session-id', session_id,
             '--input-file', input_file,
-            '--config', config_file
+            '--config-file', config_file
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         
         for line in process.stdout:
