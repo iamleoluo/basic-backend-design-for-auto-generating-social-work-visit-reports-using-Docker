@@ -12,27 +12,20 @@ graph_bp = Blueprint('graph', __name__)
 
 @graph_bp.route('/api/PersonGraph', methods=['POST'])
 def run_person_graph():
-    """人物關係圖生成API（向下相容）"""
+    """人物關係圖生成API"""
     data = request.get_json()
     text = data.get('text', '')
-    graph_type = data.get('graphType', 'person')  # 支援graph_type參數
     session_id = data.get('sessionId', str(uuid.uuid4()))
     
     def generate():
-        graph_type_name = '人物關係圖' if graph_type == 'person' else '家庭關係圖'
-        print(f"收到{graph_type_name}請求，會話ID: {session_id}")
+        print(f"收到人物關係圖請求，會話ID: {session_id}")
         
-        # 根據圖表類型選擇對應的腳本和配置
-        if graph_type == 'family':
-            script_name = 'person_graph.py'  # 目前使用同一個腳本
-            config_file = 'family_graph.json'
-            file_prefix = 'family_graph'
-        else:
-            script_name = 'person_graph.py'
-            config_file = 'person_graph.json'
-            file_prefix = 'person_graph'
+        # 只支援人物關係圖
+        script_name = 'person_graph.py'
+        config_file = 'person_graph.json'
+        file_prefix = 'person_graph'
         
-        # 使用步驟專用文件路徑，避免衝突
+        # 使用步驟專用文件路徑
         input_file = session_manager.get_step_specific_file_path(session_id, file_prefix, 'input')
         with open(input_file, 'w', encoding='utf-8') as f:
             f.write(text)
@@ -58,27 +51,21 @@ def person_graph_chat():
     message = data.get('message', '')
     current_graph = data.get('currentGraph', '')
     transcript = data.get('transcript', '')
-    graph_type = data.get('graphType', 'person')
     session_id = data.get('sessionId', str(uuid.uuid4()))
     
     def generate():
-        graph_type_name = '人物關係圖' if graph_type == 'person' else '家庭關係圖'
-        print(f"收到{graph_type_name}對話請求，會話ID: {session_id}")
+        print(f"收到人物關係圖對話請求，會話ID: {session_id}")
         print(f"用戶消息: {message}")
         
-        # 使用步驟專用文件路徑，根據圖表類型區分
-        file_prefix = f"{graph_type}_graph_chat"
+        # 只支援人物關係圖
+        file_prefix = "person_graph_chat"
         input_file = session_manager.get_step_specific_file_path(session_id, file_prefix, 'input')
         with open(input_file, 'w', encoding='utf-8') as f:
-            f.write(f"原始逐字稿:\n{transcript}\n\n當前{graph_type_name}JSON:\n{current_graph}\n\n用戶指令:\n{message}")
+            f.write(f"原始逐字稿:\n{transcript}\n\n當前人物關係圖JSON:\n{current_graph}\n\n用戶指令:\n{message}")
         
-        # 根據圖表類型選擇對應的腳本和配置文件
-        if graph_type == 'family':
-            script_name = 'family_graph_chat.py'
-            config_file = 'family_graph_chat.json'
-        else:
-            script_name = 'person_graph_chat.py'
-            config_file = 'person_graph_chat.json'
+        # 只使用人物關係圖腳本和配置
+        script_name = 'person_graph_chat.py'
+        config_file = 'person_graph_chat.json'
         
         process = subprocess.Popen([
             sys.executable, script_name,
@@ -87,7 +74,7 @@ def person_graph_chat():
             '--message', message,
             '--current-graph', current_graph or '{}',
             '--transcript', transcript,
-            '--graph-type', graph_type,
+            '--graph-type', 'person',
             '--config-file', config_file
         ], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         

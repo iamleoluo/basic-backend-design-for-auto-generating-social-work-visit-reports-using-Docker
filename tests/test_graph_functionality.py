@@ -115,110 +115,7 @@ def test_person_graph_generation():
         print(f"❌ 人物關係圖測試異常: {e}")
         return False
 
-def test_family_graph_generation():
-    """測試家庭關係圖生成"""
-    print("\n🧪 測試家庭關係圖生成...")
-    
-    test_data = {
-        "text": """
-        訪視紀錄
-        
-        案主一家四口：
-        - 案主（35歲）：家庭主婦，主要照顧者
-        - 配偶（38歲）：上班族，經濟支柱
-        - 大兒子（8歲）：小學生
-        - 小兒子（5歲）：幼稚園
-        
-        案主原生家庭：
-        - 父親已過世
-        - 母親（65歲）：退休，偶爾協助
-        - 姊姊（40歲）：已婚，住附近
-        
-        配偶原生家庭：
-        - 父親（70歲）：退休，身體不佳
-        - 母親（68歲）：主要照顧公公
-        - 弟弟（35歲）：未婚，與父母同住
-        """,
-        "graphType": "family",
-        "sessionId": "test_family_graph"
-    }
-    
-    try:
-        response = requests.post(
-            'http://localhost:5353/api/PersonGraph',
-            headers={'Content-Type': 'application/json'},
-            json=test_data,
-            stream=True,
-            timeout=30
-        )
-        
-        print(f"📡 家庭關係圖API響應狀態: {response.status_code}")
-        
-        if response.status_code != 200:
-            print(f"❌ 家庭關係圖測試失敗，狀態碼: {response.status_code}")
-            return False
-        
-        # 收集流式響應
-        content_parts = []
-        for line in response.iter_lines():
-            if line:
-                try:
-                    line_str = line.decode('utf-8')
-                    if line_str.strip():
-                        data = json.loads(line_str)
-                        if 'content' in data:
-                            content_parts.append(data['content'])
-                            print(".", end="", flush=True)
-                except json.JSONDecodeError:
-                    continue
-        
-        full_content = ''.join(content_parts)
-        print(f"\n📄 家庭關係圖JSON長度: {len(full_content)} 字元")
-        
-        # 清理JSON內容
-        cleaned_content = clean_json_content(full_content)
-        
-        # 驗證JSON格式（FamilyTree.js 格式是數組）
-        try:
-            graph_data = json.loads(cleaned_content)
-            
-            # 檢查是否為數組格式（FamilyTree.js 要求）
-            if not isinstance(graph_data, list):
-                print("❌ 家庭關係圖應該是數組格式")
-                return False
-            
-            family_members = len(graph_data)
-            print(f"✅ 家庭關係圖包含 {family_members} 個家庭成員")
-            
-            # 檢查是否包含必要的 FamilyTree.js 字段
-            valid_members = 0
-            for member in graph_data:
-                if isinstance(member, dict) and 'id' in member and 'name' in member:
-                    valid_members += 1
-            
-            if valid_members > 0:
-                print(f"✅ 包含 {valid_members} 個有效的家庭成員資訊")
-                
-                # 檢查是否包含案主
-                member_names = [member.get('name', '') for member in graph_data]
-                if any('案主' in name for name in member_names):
-                    print("✅ 包含案主資訊")
-                else:
-                    print("⚠️ 可能缺少案主資訊")
-                
-                return True
-            else:
-                print("❌ 沒有找到有效的家庭成員資訊")
-                return False
-            
-        except json.JSONDecodeError as e:
-            print(f"❌ 生成的JSON格式錯誤: {e}")
-            print(f"內容預覽: {full_content[:200]}...")
-            return False
-        
-    except Exception as e:
-        print(f"❌ 家庭關係圖測試異常: {e}")
-        return False
+# 移除家庭關係圖測試功能
 
 def test_graph_chat_functionality():
     """測試關係圖對話功能"""
@@ -286,7 +183,7 @@ if __name__ == '__main__':
     
     # 執行測試
     test_results.append(test_person_graph_generation())
-    test_results.append(test_family_graph_generation())
+    # 移除家庭關係圖測試
     test_results.append(test_graph_chat_functionality())
     
     # 總結
